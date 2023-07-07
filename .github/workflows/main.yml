@@ -1,0 +1,15 @@
+name: Remote connection
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+
+    - name: Build and run Docker image
+      run: |
+        docker build -t remote-connection .
+        docker run -d -p 3389:3389 --name remote-connection remote-connection
