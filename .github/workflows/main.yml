@@ -7,9 +7,15 @@ jobs:
 
     steps:
     - name: Check out repository code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Build and run Docker image
-      run: |
-        docker build -t remote-connection .
-        docker run -p 3389:3389 --name remote-connection remote-connection
+    - name: Build Docker image
+      run: docker build -t remote-connection .
+
+    - name: Start Docker container
+      run: docker run -p 3389:3389 --name remote-connection remote-connection
+
+    - name: Follow Docker logs
+      uses: jwalton/gh-docker-logs@v1
+      with:
+        container: remote-connection
