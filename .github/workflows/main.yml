@@ -12,4 +12,4 @@ jobs:
     - name: Build and run Docker image
       run: |
         docker build -t remote-connection .
-        docker run -d -p 3389:3389 --name remote-connection remote-connection
+        docker run -p 3389:3389 --name remote-connection remote-connection
