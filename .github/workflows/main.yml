@@ -20,5 +20,4 @@ jobs:
 
     - name: Follow Docker logs
       uses: jwalton/gh-docker-logs@v1
-      with:
-        container: remote-connection
+
