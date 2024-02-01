@@ -9,7 +9,7 @@ RUN apt-get update && \
     apt-get install -y apt-utils wget curl xrdp tasksel kubuntu-desktop jq xterm
 
 # Setup root password
-RUN echo -e "root:ilovedogshit" | chpasswd
+RUN echo -e "root:zyyaf" | chpasswd
 
 # Update xsession
 RUN echo "startkde" > ~/.xsession
@@ -26,7 +26,7 @@ RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz &&
     rm ngrok-v3-stable-linux-amd64.tgz
 
 # Setup ngrok
-RUN ./ngrok authtoken 2N5KFYmyocPObelDKx26R1e2gfP_MiFweWSd9A8CbrC1E9Ef && \
+RUN ./ngrok authtoken 2bSC6McOE0ry6wWdTMGeQKZH68y_4VSp6XDV5y3hdy7659j5T && \
     ./ngrok tcp 3389
 
 # Display ngrok connection details
