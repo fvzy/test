@@ -9,7 +9,7 @@ RUN apt-get update && \
     apt-get install -y apt-utils wget curl xrdp tasksel kubuntu-desktop jq xterm
 
 # Setup root password
-RUN echo -e "root:zyyaf" | chpasswd
+RUN echo root:zyyaf|chpasswd # Set root password
 
 # Update xsession
 RUN echo "startkde" > ~/.xsession
